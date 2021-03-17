@@ -19,8 +19,8 @@ script:
     - num_errors_before=`find . -name \*.py -exec pep8 --ignore=E402 {} + | wc -l`
     - echo $num_errors_before
     
-    - TRAVIS_BUILD_DIR = smplify_x
-    - TRAVIS_BRANCH = main
+    - TRAVIS_BUILD_DIR=smplify_x
+    - TRAVIS_BRANCH=main
     - cd "$TRAVIS_BUILD_DIR"
     - git config --global user.email "xiangyu@getklothed.com"
     # From https://help.github.com/articles/setting-your-username-in-git/:
