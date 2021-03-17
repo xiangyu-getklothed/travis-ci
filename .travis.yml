@@ -1,9 +1,5 @@
 language: python
 python:
-    - 2.7
-    - 3.3
-    - 3.4
-    - 3.5
     - 3.7
 notifications:
     email: false
@@ -23,7 +19,7 @@ script:
     - num_errors_before=`find . -name \*.py -exec pep8 --ignore=E402 {} + | wc -l`
     - echo $num_errors_before
     
-    - TRAVIS_BUILD_DIR = xmplify_x
+    - TRAVIS_BUILD_DIR = smplify_x
     - TRAVIS_BRANCH = main
     - cd "$TRAVIS_BUILD_DIR"
     - git config --global user.email "xiangyu@getklothed.com"
