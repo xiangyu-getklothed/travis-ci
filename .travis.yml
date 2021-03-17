@@ -36,14 +36,13 @@ script:
     - num_errors_after=`find . -name \*.py -exec pep8 --ignore=E402 {} + | wc -l`
     - echo $num_errors_after
 
-    - |
-        if (( $num_errors_after < $num_errors_before )); then
+    - if (( $num_errors_after < $num_errors_before )); then
             git commit -a -m "PEP-8 Fix"
             git config --global push.default simple # Push only to the current branch.  
             # Make sure to make the output quiet, or else the API token will 
             # leak!  This works because the API key can replace your password.
             git push --quiet
-        fi
+      fi
     - cd "$TRAVIS_BUILD_DIR"
 
     # List the remaining errors - these will have to be fixed manually
