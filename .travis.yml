@@ -28,7 +28,7 @@ script:
     # used for identification. If you use your email address associated 
     # with a GitHub account, we'll use your GitHub username, instead of 
     # this name.
-    - git config --global user.name "xiangyu-getklothed"
+    - git config --global user.name "Xiangyu Wang"
     - git checkout $TRAVIS_BRANCH
 
     - find . -name \*.py -exec autopep8 --recursive --aggressive --aggressive --in-place {} +
@@ -41,7 +41,7 @@ script:
             git config --global push.default simple # Push only to the current branch.  
             # Make sure to make the output quiet, or else the API token will 
             # leak!  This works because the API key can replace your password.
-            git push --quiet
+            git push origin --quiet
         fi
 
     # List the remaining errors - these will have to be fixed manually
