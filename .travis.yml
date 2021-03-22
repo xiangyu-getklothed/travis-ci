@@ -21,26 +21,26 @@ script:
     - num_errors_before=`find . -name \*.py -exec pep8 --ignore=E402 {} + | wc -l`
     - echo $num_errors_before
     
-    #- git config --global user.email "xiangyu@getklothed.com"
-    #- git config --global user.name "Xiangyu Wang"
-    #- TRAVIS_BRANCH=main
-    #- git checkout $TRAVIS_BRANCH
+    - git config --global user.email "xiangyu@getklothed.com"
+    - git config --global user.name "Xiangyu Wang"
+    - TRAVIS_BRANCH=main
+    - git checkout $TRAVIS_BRANCH
 
     - find . -name \*.py -exec autopep8 --recursive --aggressive --aggressive --in-place {} +
     - num_errors_after=`find . -name \*.py -exec pep8 --ignore=E402 {} + | wc -l`
     - echo $num_errors_after
 
-    #- GITHUB_API_KEY=acca26e9053e4816e36b1cf4cf7e8ee00126a9f6
-    #- GH_REF=github.com/xiangyu-getklothed/travis-ci
+    - GITHUB_API_KEY=acca26e9053e4816e36b1cf4cf7e8ee00126a9f6
+    - GH_REF=github.com/xiangyu-getklothed/travis-ci
 
-    #- |
-    #    if (( $num_errors_after < $num_errors_before )); then
-    #        git commit -a -m "PEP-8 Fix"
-    #        git config --global push.default simple # Push only to the current branch.  
-    #        # Make sure to make the output quiet, or else the API token will 
-    #        # leak!  This works because the API key can replace your password.
-    #        git push --quiet https://xiangyu-getklothed:${GITHUB_API_KEY}@${GH_REF}
-    #    fi
+    - |
+        if (( $num_errors_after < $num_errors_before )); then
+            git commit -a -m "PEP-8 Fix"
+            git config --global push.default simple # Push only to the current branch.  
+            # Make sure to make the output quiet, or else the API token will 
+            # leak!  This works because the API key can replace your password.
+            git push https://xiangyu-getklothed:${GITHUB_API_KEY}@${GH_REF}
+        fi
 
     # List the remaining errors - these will have to be fixed manually
     - find . -name \*.py -exec pep8 --ignore=E402 {} +
