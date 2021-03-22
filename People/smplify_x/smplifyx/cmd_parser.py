@@ -278,14 +278,23 @@ def parse_config(argv=None):
                         help='The tolerance threshold for the function')
     parser.add_argument('--maxiters', type=int, default=100,
                         help='The maximum iterations for the optimization')
-    
-    parser.add_argument('--use_densepose', type=lambda arg: arg.lower() == 'true', default=False,
-                        help='Use densepose labels to improve the result')
-    parser.add_argument('--densep_folder', type=str, default='densepose',
-                        help='The folder where the densepose results are stored')
-    parser.add_argument('--smplx_atlas_fn', type=str, default='/Monolith/People/IlyaKavalerov/models/' + 
-                        'smplify_x/smplifyx_smplx_atlas_iuv.npz', 
-                        help='The file with the smplx to atlas iuv matching ')
+
+    parser.add_argument(
+        '--use_densepose',
+        type=lambda arg: arg.lower() == 'true',
+        default=False,
+        help='Use densepose labels to improve the result')
+    parser.add_argument(
+        '--densep_folder',
+        type=str,
+        default='densepose',
+        help='The folder where the densepose results are stored')
+    parser.add_argument(
+        '--smplx_atlas_fn',
+        type=str,
+        default='/Monolith/People/IlyaKavalerov/models/' +
+        'smplify_x/smplifyx_smplx_atlas_iuv.npz',
+        help='The file with the smplx to atlas iuv matching ')
     parser.add_argument('--densepose_loss_weight',
                         default=[1., 1., 1., 1.],
                         type=float, nargs='*',

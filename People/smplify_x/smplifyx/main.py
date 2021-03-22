@@ -39,7 +39,8 @@ from camera import create_camera
 from prior import create_prior
 
 torch.backends.cudnn.enabled = False
-#os.environ["PYOPENGL_PLATFORM"] = "osmesa" # egl doesn't work for me
+# os.environ["PYOPENGL_PLATFORM"] = "osmesa" # egl doesn't work for me
+
 
 def main(**args):
     output_folder = args.pop('output_folder')
@@ -203,7 +204,7 @@ def main(**args):
     for idx, data in enumerate(dataset_obj):
         img = data['img']
         fn = data['fn']
-        #if fn == '1' or fn == '2' or fn == '3':
+        # if fn == '1' or fn == '2' or fn == '3':
         #    continue
         if fn != '7':
             continue
@@ -274,7 +275,7 @@ def main(**args):
                              face_idx_to_atlas_i=face_idx_to_atlas_i,
                              densepose_loss_weights=densepose_loss_weights,
                              **args)
-        
+
     elapsed = time.time() - start
     time_msg = time.strftime('%H hours, %M minutes, %S seconds',
                              time.gmtime(elapsed))

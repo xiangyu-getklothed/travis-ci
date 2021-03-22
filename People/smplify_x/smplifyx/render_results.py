@@ -28,7 +28,8 @@ import time
 import trimesh
 from mesh_viewer import MeshViewer
 import os
-os.environ["PYOPENGL_PLATFORM"] = "osmesa" # egl doesn't work for me
+os.environ["PYOPENGL_PLATFORM"] = "osmesa"  # egl doesn't work for me
+
 
 class KeyHandler(object):
     def __init__(self, mesh_fns, verbose=False):

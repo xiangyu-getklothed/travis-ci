@@ -55,14 +55,14 @@ class PerspectiveCamera(nn.Module):
         self.register_buffer('zero',
                              torch.zeros([batch_size], dtype=dtype))
 
-        if focal_length_x is None or type(focal_length_x) == float:
+        if focal_length_x is None or isinstance(focal_length_x, float):
             focal_length_x = torch.full(
                 [batch_size],
                 self.FOCAL_LENGTH if focal_length_x is None else
                 focal_length_x,
                 dtype=dtype)
 
-        if focal_length_y is None or type(focal_length_y) == float:
+        if focal_length_y is None or isinstance(focal_length_y, float):
             focal_length_y = torch.full(
                 [batch_size],
                 self.FOCAL_LENGTH if focal_length_y is None else
@@ -115,4 +115,3 @@ class PerspectiveCamera(nn.Module):
         img_points = torch.einsum('bki,bji->bjk', [camera_mat, img_points]) \
             + self.center.unsqueeze(dim=1)
         return img_points
-

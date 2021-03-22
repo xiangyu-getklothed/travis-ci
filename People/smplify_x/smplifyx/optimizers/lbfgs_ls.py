@@ -36,9 +36,19 @@ def _cubic_interpolate(x1, f1, g1, x2, f2, g2, bounds=None):
         return (xmin_bound + xmax_bound) / 2.
 
 
-def _strong_Wolfe(obj_func, x, t, d, f, g, gtd, c1=1e-4, c2=0.9, tolerance_change=1e-9,
-                  max_iter=20,
-                  max_ls=25):
+def _strong_Wolfe(
+        obj_func,
+        x,
+        t,
+        d,
+        f,
+        g,
+        gtd,
+        c1=1e-4,
+        c2=0.9,
+        tolerance_change=1e-9,
+        max_iter=20,
+        max_ls=25):
     # ported from https://github.com/torch/optim/blob/master/lswolfe.lua
     d_norm = d.abs().max()
     g = g.clone()
@@ -138,7 +148,9 @@ def _strong_Wolfe(obj_func, x, t, d, f, g, gtd, c1=1e-4, c2=0.9, tolerance_chang
             bracket_f[high_pos] = f_new
             bracket_g[high_pos] = g_new.clone()
             bracket_gtd[high_pos] = gtd_new
-            low_pos, high_pos = (0, 1) if bracket_f[0] <= bracket_f[1] else (1, 0)
+            low_pos, high_pos = (
+                0, 1) if bracket_f[0] <= bracket_f[1] else (
+                1, 0)
         else:
             if abs(gtd_new) <= -c2 * gtd:
                 # Wolfe conditions satisfied
@@ -201,9 +213,14 @@ class LBFGS(Optimizer):
                  line_search_fn=None):
         if max_eval is None:
             max_eval = max_iter * 5 // 4
-        defaults = dict(lr=lr, max_iter=max_iter, max_eval=max_eval,
-                        tolerance_grad=tolerance_grad, tolerance_change=tolerance_change,
-                        history_size=history_size, line_search_fn=line_search_fn)
+        defaults = dict(
+            lr=lr,
+            max_iter=max_iter,
+            max_eval=max_eval,
+            tolerance_grad=tolerance_grad,
+            tolerance_change=tolerance_change,
+            history_size=history_size,
+            line_search_fn=line_search_fn)
         super(LBFGS, self).__init__(params, defaults)
 
         if len(self.param_groups) != 1:
@@ -215,7 +232,8 @@ class LBFGS(Optimizer):
 
     def _numel(self):
         if self._numel_cache is None:
-            self._numel_cache = reduce(lambda total, p: total + p.numel(), self._params, 0)
+            self._numel_cache = reduce(
+                lambda total, p: total + p.numel(), self._params, 0)
         return self._numel_cache
 
     def _gather_flat_grad(self):
@@ -235,7 +253,8 @@ class LBFGS(Optimizer):
         for p in self._params:
             numel = p.numel()
             # view as to avoid deprecated pointwise semantics
-            p.data.add_(step_size, update[offset:offset + numel].view_as(p.data))
+            p.data.add_(step_size,
+                        update[offset:offset + numel].view_as(p.data))
             offset += numel
         assert offset == self._numel()
 
@@ -247,9 +266,9 @@ class LBFGS(Optimizer):
             p.data.copy_(pdata)
 
     def _directional_evaluate(self, closure, x, t, d):
-        self._add_grad(t, d) 
+        self._add_grad(t, d)
         loss = closure()
-        if type(loss) == tuple:
+        if isinstance(loss, tuple):
             loss = float(loss[0])
         else:
             loss = float(loss)
@@ -282,7 +301,7 @@ class LBFGS(Optimizer):
 
         # evaluate initial f(x) and df/dx
         orig_loss = closure()
-        if type(orig_loss) == tuple:
+        if isinstance(orig_loss, tuple):
             loss = float(orig_loss[0])
         else:
             loss = float(orig_loss)
@@ -397,11 +416,8 @@ class LBFGS(Optimizer):
 
                     def obj_func(x, t, d):
                         return self._directional_evaluate(closure, x, t, d)
-                    loss, flat_grad, t, ls_func_evals = _strong_Wolfe(obj_func, x_init, t, d,
-                                                                      loss,
-                                                                      flat_grad,
-                                                                      gtd,
-                                                                      max_iter=max_iter)
+                    loss, flat_grad, t, ls_func_evals = _strong_Wolfe(
+                        obj_func, x_init, t, d, loss, flat_grad, gtd, max_iter=max_iter)
                 self._add_grad(t, d)
                 opt_cond = flat_grad.abs().max() <= tolerance_grad
             else:

@@ -127,7 +127,7 @@ class MaxMixturePrior(nn.Module):
         with open(full_gmm_fn, 'rb') as f:
             gmm = pickle.load(f, encoding='latin1')
 
-        if type(gmm) == dict:
+        if isinstance(gmm, dict):
             means = gmm['means'].astype(np_dtype)
             covs = gmm['covars'].astype(np_dtype)
             weights = gmm['weights'].astype(np_dtype)

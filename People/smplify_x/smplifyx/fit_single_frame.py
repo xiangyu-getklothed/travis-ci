@@ -289,14 +289,20 @@ def fit_single_frame(img,
     if use_densepose:
         densepose_i[0] = torch.tensor(densepose_i[0])
         densepose_i[0] = densepose_i[0].to(device=device, dtype=torch.int32)
-        for i in range(1, 7): # 6 body parts
-            densepose_i[1][i] = torch.tensor(densepose_i[1][i], dtype=torch.float)
-            densepose_i[1][i] = densepose_i[1][i].to(device=device, dtype=torch.float)
-        face_idx_to_atlas_i[0] = torch.tensor(face_idx_to_atlas_i[0], dtype=torch.int32)
-        face_idx_to_atlas_i[0] = face_idx_to_atlas_i[0].to(device=device, dtype=torch.int32)
-        for i in range(1, 7): # 6 body parts
-            face_idx_to_atlas_i[1][i] = torch.tensor(face_idx_to_atlas_i[1][i], dtype=torch.long)
-            face_idx_to_atlas_i[1][i] = face_idx_to_atlas_i[1][i].to(device=device, dtype=torch.long)
+        for i in range(1, 7):  # 6 body parts
+            densepose_i[1][i] = torch.tensor(
+                densepose_i[1][i], dtype=torch.float)
+            densepose_i[1][i] = densepose_i[1][i].to(
+                device=device, dtype=torch.float)
+        face_idx_to_atlas_i[0] = torch.tensor(
+            face_idx_to_atlas_i[0], dtype=torch.int32)
+        face_idx_to_atlas_i[0] = face_idx_to_atlas_i[0].to(
+            device=device, dtype=torch.int32)
+        for i in range(1, 7):  # 6 body parts
+            face_idx_to_atlas_i[1][i] = torch.tensor(
+                face_idx_to_atlas_i[1][i], dtype=torch.long)
+            face_idx_to_atlas_i[1][i] = face_idx_to_atlas_i[1][i].to(
+                device=device, dtype=torch.long)
 
     loss = fitting.create_loss(loss_type=loss_type,
                                joint_weights=joint_weights,
@@ -373,11 +379,11 @@ def fit_single_frame(img,
         # of the camera and the initial pose of the body model.
         camera_init_start = time.time()
         cam_init_loss_val, _ = monitor.run_fitting(camera_optimizer,
-                                                fit_camera,
-                                                camera_opt_params, body_model,
-                                                use_vposer=use_vposer,
-                                                pose_embedding=pose_embedding,
-                                                vposer=vposer, camera_fitting=True)
+                                                   fit_camera,
+                                                   camera_opt_params, body_model,
+                                                   use_vposer=use_vposer,
+                                                   pose_embedding=pose_embedding,
+                                                   vposer=vposer, camera_fitting=True)
 
         if interactive:
             if use_cuda and torch.cuda.is_available():
@@ -410,7 +416,8 @@ def fit_single_frame(img,
         # Step 2: Optimize the full model
         final_loss_val = 0
         final_min_dist = None
-        for or_idx, orient in enumerate(tqdm(orientations, desc='Orientation')):
+        for or_idx, orient in enumerate(
+                tqdm(orientations, desc='Orientation')):
             opt_start = time.time()
 
             new_params = defaultdict(global_orient=orient,
@@ -420,7 +427,8 @@ def fit_single_frame(img,
                 with torch.no_grad():
                     pose_embedding.fill_(0)
 
-            for opt_idx, curr_weights in enumerate(tqdm(opt_weights, desc='Stage')):
+            for opt_idx, curr_weights in enumerate(
+                    tqdm(opt_weights, desc='Stage')):
 
                 body_params = list(body_model.parameters())
 
@@ -431,8 +439,7 @@ def fit_single_frame(img,
                     final_params.append(pose_embedding)
 
                 body_optimizer, body_create_graph = optim_factory.create_optimizer(
-                    final_params,
-                    **kwargs)
+                    final_params, **kwargs)
                 body_optimizer.zero_grad()
 
                 curr_weights['data_weight'] = data_weight
@@ -470,9 +477,9 @@ def fit_single_frame(img,
                         torch.cuda.synchronize()
                     elapsed = time.time() - stage_start
                     if interactive:
-                        tqdm.write('Stage {:03d} done after {:.4f} seconds'.format(
-                            opt_idx, elapsed))
-
+                        tqdm.write(
+                            'Stage {:03d} done after {:.4f} seconds'.format(
+                                opt_idx, elapsed))
 
             if interactive:
                 if use_cuda and torch.cuda.is_available():
@@ -517,10 +524,10 @@ def fit_single_frame(img,
         model_type = kwargs.get('model_type', 'smpl')
         append_wrists = model_type == 'smpl' and use_vposer
         if append_wrists:
-                wrist_pose = torch.zeros([body_pose.shape[0], 6],
-                                         dtype=body_pose.dtype,
-                                         device=body_pose.device)
-                body_pose = torch.cat([body_pose, wrist_pose], dim=1)
+            wrist_pose = torch.zeros([body_pose.shape[0], 6],
+                                     dtype=body_pose.dtype,
+                                     device=body_pose.device)
+            body_pose = torch.cat([body_pose, wrist_pose], dim=1)
 
         model_output = body_model(return_verts=True, body_pose=body_pose)
         vertices = model_output.vertices.detach().cpu().numpy().squeeze()
@@ -540,14 +547,14 @@ def fit_single_frame(img,
             """
             thetas = np.pi * np.array([1.0 / 6.0, 1.0 / 6.0, 1.0 / 6.0])
             phis = np.pi * np.array([0.0, 2.0 / 3.0, 4.0 / 3.0])
-    
+
             nodes = []
-    
+
             for phi, theta in zip(phis, thetas):
                 xp = np.sin(theta) * np.cos(phi)
                 yp = np.sin(theta) * np.sin(phi)
                 zp = np.cos(theta)
-    
+
                 z = np.array([xp, yp, zp])
                 z = z / np.linalg.norm(z)
                 x = np.array([-z[1], z[0], 0.0])
@@ -555,16 +562,18 @@ def fit_single_frame(img,
                     x = np.array([1.0, 0.0, 0.0])
                 x = x / np.linalg.norm(x)
                 y = np.cross(z, x)
-    
+
                 matrix = np.eye(4)
-                matrix[:3,:3] = np.c_[x,y,z]
-                nodes.append(pyrender.Node(
-                    light=pyrender.DirectionalLight(color=np.ones(3), intensity=1.0),
-                    matrix=matrix
-                ))
-    
+                matrix[:3, :3] = np.c_[x, y, z]
+                nodes.append(
+                    pyrender.Node(
+                        light=pyrender.DirectionalLight(
+                            color=np.ones(3),
+                            intensity=1.0),
+                        matrix=matrix))
+
             return nodes
-        
+
         import pyrender
 
         material = pyrender.MetallicRoughnessMaterial(
@@ -604,14 +613,13 @@ def fit_single_frame(img,
         color, depth = r.render(scene, flags=pyrender.RenderFlags.RGBA)
         r.delete()
         color = color.astype(np.float32) / 255.0
-        
-        if color.shape[2] == 4: # RGBA succeeded
+
+        if color.shape[2] == 4:  # RGBA succeeded
             valid_mask = (color[:, :, -1] > 0)[:, :, np.newaxis]
-            color = color[:,:,:-1]
-        else: # RGBA doesn't work with osmesa, https://github.com/mmatl/pyrender/issues/137
+            color = color[:, :, :-1]
+        else:  # RGBA doesn't work with osmesa, https://github.com/mmatl/pyrender/issues/137
             valid_mask = (depth > 0)[:, :, np.newaxis]
-            
-            
+
         input_img = img.detach().cpu().numpy()
         output_img = (color * valid_mask +
                       (1 - valid_mask) * input_img)

@@ -27,7 +27,7 @@ import torch.nn as nn
 
 
 def to_tensor(tensor, dtype=torch.float32):
-    if torch.Tensor == type(tensor):
+    if isinstance(tensor, torch.Tensor):
         return tensor.clone().detach()
     else:
         return torch.tensor(tensor, dtype)
@@ -182,30 +182,34 @@ def smpl_to_openpose(model_type='smplx', use_hands=True, use_face=True,
     else:
         raise ValueError('Unknown joint format: {}'.format(openpose_format))
 
-def group_atlas_i(atlas_i):
-  atlas_i = list(atlas_i)
-  group_mapping = [0, 1, 1, 2, 3, 5, 4, 4, 5, 4, 5, 4, 5, 4, 5, 3, 2, 3, 2, 3, 2, 3, 2, 6, 6]
-  def group(i):
-    if i >= 0 and i <= 24:
-      return group_mapping[i]
-    elif i == -1:
-      return -1
-    else:
-      raise ValueError("Unknown atlas i: {}.".format(i))
-  grouped_atlas_i = np.array([group(i) for i in atlas_i])
-  return grouped_atlas_i
 
-#grouping results:
-#0 = background
-#1 = torso
-#2 = right arm + hand
-#3 = left arm + hand
-#4 = right leg + foot
-#5 = left leg + foot
-#6 = head
+def group_atlas_i(atlas_i):
+    atlas_i = list(atlas_i)
+    group_mapping = [0, 1, 1, 2, 3, 5, 4, 4, 5, 4,
+                     5, 4, 5, 4, 5, 3, 2, 3, 2, 3, 2, 3, 2, 6, 6]
+
+    def group(i):
+        if i >= 0 and i <= 24:
+            return group_mapping[i]
+        elif i == -1:
+            return -1
+        else:
+            raise ValueError("Unknown atlas i: {}.".format(i))
+    grouped_atlas_i = np.array([group(i) for i in atlas_i])
+    return grouped_atlas_i
+
+# grouping results:
+# 0 = background
+# 1 = torso
+# 2 = right arm + hand
+# 3 = left arm + hand
+# 4 = right leg + foot
+# 5 = left leg + foot
+# 6 = head
 
 #  0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,11,12,13,14,15,16,17,18,19,20,21,22,23,24
 # [0, 1, 1, 2, 3, 5, 4, 4, 5, 4, 5, 4, 5, 4, 5, 3, 2, 3, 2, 3, 2, 3, 2, 6, 6]
+
 
 '''
 original atlas_i:

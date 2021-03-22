@@ -100,10 +100,11 @@ def read_keypoints(keypoint_fn, use_hands=True, use_face=True,
     return Keypoints(keypoints=keypoints, gender_pd=gender_pd,
                      gender_gt=gender_gt)
 
+
 def read_densepose(densepose_fn, smplx_atlas_fn):
-    #get the list of pixels / points for each part_id
-    #densepose_i: i_arr and i_dict
-    #face_idx_to_atlas_i: face_idx_to_atlas_i_arr and face_idx_to_atlas_i_dict
+    # get the list of pixels / points for each part_id
+    # densepose_i: i_arr and i_dict
+    # face_idx_to_atlas_i: face_idx_to_atlas_i_arr and face_idx_to_atlas_i_dict
 
     npzfile = np.load(densepose_fn)
     iuv_arr = npzfile['iuv_arr']
@@ -117,10 +118,11 @@ def read_densepose(densepose_fn, smplx_atlas_fn):
             if i_arr[r][c] == 0:
                 continue
             i_dict[i_arr[r][c]].append((r, c))
-    #print('# of pixels in i_dict part {} is {}.'.format(4, len(i_dict[4])))
+    # print('# of pixels in i_dict part {} is {}.'.format(4, len(i_dict[4])))
 
     smplx_atlas_data = np.load(smplx_atlas_fn)
-    face_idx_to_atlas_i_arr = group_atlas_i(smplx_atlas_data['face_idx_to_atlas_i'].astype(np.int32))
+    face_idx_to_atlas_i_arr = group_atlas_i(
+        smplx_atlas_data['face_idx_to_atlas_i'].astype(np.int32))
     #print('face_idx_to_atlas_i:', face_idx_to_atlas_i_arr.shape, np.unique(face_idx_to_atlas_i_arr))
     face_idx_to_atlas_i_dict = defaultdict(list)
     for index in range(len(face_idx_to_atlas_i_arr)):
@@ -129,6 +131,7 @@ def read_densepose(densepose_fn, smplx_atlas_fn):
             face_idx_to_atlas_i_dict[i].append(index)
     #print('face_idx_to_atlas_i_dict:', face_idx_to_atlas_i_dict)
     return [i_arr, i_dict], [face_idx_to_atlas_i_arr, face_idx_to_atlas_i_dict]
+
 
 class OpenPose(Dataset):
 
@@ -144,9 +147,9 @@ class OpenPose(Dataset):
                  joints_to_ign=None,
                  use_face_contour=False,
                  openpose_format='coco25',
-                 use_densepose = False,
-                 densep_folder = 'densepose',
-                 smplx_atlas_fn = None,
+                 use_densepose=False,
+                 densep_folder='densepose',
+                 smplx_atlas_fn=None,
                  **kwargs):
         super(OpenPose, self).__init__()
 
@@ -227,10 +230,10 @@ class OpenPose(Dataset):
 
         if self.use_densepose:
             densepose_fn = osp.join(self.densep_folder,
-                               img_fn + '_iuv.npz')
+                                    img_fn + '_iuv.npz')
             smplx_atlas_fn = self.smplx_atlas_fn
-            denspose_i,face_idx_to_atlas_i = read_densepose(densepose_fn, smplx_atlas_fn)
-
+            denspose_i, face_idx_to_atlas_i = read_densepose(
+                densepose_fn, smplx_atlas_fn)
 
         output_dict = {'fn': img_fn,
                        'img_path': img_path,

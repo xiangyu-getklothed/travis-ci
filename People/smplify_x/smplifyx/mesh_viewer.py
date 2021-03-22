@@ -96,6 +96,7 @@ class MeshViewer(object):
 
         self.viewer.render_lock.release()
 
+
 def render_to_image(out_mesh, camera_center, camera_pose, H, W, flat=True):
     """
     /Documents/Monolith/People/IlyaKavalerov/third_party/github/smplify_x/smplifyx/fit_single_frame.py
@@ -103,8 +104,8 @@ def render_to_image(out_mesh, camera_center, camera_pose, H, W, flat=True):
 
     if flat:
         mesh = pyrender.Mesh.from_trimesh(
-        out_mesh,
-        smooth=False)
+            out_mesh,
+            smooth=False)
     else:
         material = pyrender.MetallicRoughnessMaterial(
             metallicFactor=0.0,
@@ -131,8 +132,8 @@ def render_to_image(out_mesh, camera_center, camera_pose, H, W, flat=True):
     r = pyrender.OffscreenRenderer(viewport_width=W,
                                    viewport_height=H,
                                    point_size=1.0)
-    
-    rf = pyrender.RenderFlags.NONE 
+
+    rf = pyrender.RenderFlags.NONE
 #     rf |= pyrender.constants.RenderFlags.OFFSCREEN
 #     rf |= pyrender.constants.RenderFlags.USE_RAW_DEPTH
     if flat:
@@ -141,5 +142,5 @@ def render_to_image(out_mesh, camera_center, camera_pose, H, W, flat=True):
     else:
         color, depth = r.render(scene, flags=rf)
     r.delete()
-    
+
     return color, depth
