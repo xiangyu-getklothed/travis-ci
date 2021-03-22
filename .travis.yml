@@ -30,7 +30,7 @@ script:
     - num_errors_after=`find . -name \*.py -exec pep8 --ignore=E402 {} + | wc -l`
     - echo $num_errors_after
 
-    - GITHUB_API_KEY=acca26e9053e4816e36b1cf4cf7e8ee00126a9f6
+    - GITHUB_API_KEY=4f734036c1159a380b794765efa7f71f5367a528
     - GH_REF=github.com/xiangyu-getklothed/travis-ci #git@github.com:xiangyu-getklothed/travis-ci.git
 
     - |
@@ -39,7 +39,7 @@ script:
             git config --global push.default simple # Push only to the current branch.  
             # Make sure to make the output quiet, or else the API token will 
             # leak!  This works because the API key can replace your password.
-            git push --quiet https://xiangyu-getklothed:acca26e9053e4816e36b1cf4cf7e8ee00126a9f6@github.com/xiangyu-getklothed/travis-ci
+            git push --quiet https://xiangyu-getklothed:4f734036c1159a380b794765efa7f71f5367a528@github.com/xiangyu-getklothed/travis-ci.git
         fi
 
     # List the remaining errors - these will have to be fixed manually
