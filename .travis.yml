@@ -36,7 +36,7 @@ script:
     - echo $num_errors_after
 
     - GITHUB_API_KEY=acca26e9053e4816e36b1cf4cf7e8ee00126a9f6
-    - GH_REF=https://github.com/xiangyu-getklothed/travis-ci
+    - GH_REF=github.com/xiangyu-getklothed/travis-ci
 
     - |
         if (( $num_errors_after < $num_errors_before )); then
