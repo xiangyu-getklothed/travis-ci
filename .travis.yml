@@ -31,7 +31,7 @@ script:
     - echo $num_errors_after
 
     - GITHUB_API_KEY=acca26e9053e4816e36b1cf4cf7e8ee00126a9f6
-    - GH_REF=github.com/xiangyu-getklothed/travis-ci
+    - GH_REF=github.com/xiangyu-getklothed/travis-ci #git@github.com:xiangyu-getklothed/travis-ci.git
 
     - |
         if (( $num_errors_after < $num_errors_before )); then
@@ -39,7 +39,7 @@ script:
             git config --global push.default simple # Push only to the current branch.  
             # Make sure to make the output quiet, or else the API token will 
             # leak!  This works because the API key can replace your password.
-            git push https://xiangyu-getklothed:${GITHUB_API_KEY}@${GH_REF}
+            git push --quiet https://xiangyu-getklothed:acca26e9053e4816e36b1cf4cf7e8ee00126a9f6@github.com/xiangyu-getklothed/travis-ci
         fi
 
     # List the remaining errors - these will have to be fixed manually
